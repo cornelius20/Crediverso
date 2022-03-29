@@ -11,7 +11,9 @@ export type TextColorType =
   | 'title'
   | 'body'
   | 'bodySecondary'
-  | 'success';
+  | 'success'
+  | 'lightGrey'
+  | 'highGrey';
 export type TextSizeType = 'tiny' | 'small' | 'large' | 'larger'; // Normal is assumed no fontSize
 
 export type TextPropType = {

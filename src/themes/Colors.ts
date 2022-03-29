@@ -32,8 +32,8 @@ const Colors = {
     darker: '#434343',
     dark: '#777777',
     light: '#B0B0B0',
-    lighter: '#ECECEC',
-    lightest: '#F8F8F8',
+    lighter: '#696c75',
+    lightest: '#494b55',
   },
 
   inputBorder: '#CDDEFE',
@@ -74,7 +74,7 @@ const Colors = {
     kvpParentalLeave: '#DD5849',
     checkIn: '#234D69',
   },
-  backgroundScreen: '#F5F7F7',
+  backgroundScreen: '#2f2d3e',
   backgroundSecondScreen: '#FFFFF4',
   business: {
     resolve: {
