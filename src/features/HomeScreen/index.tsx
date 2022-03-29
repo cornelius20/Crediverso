@@ -1,37 +1,68 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useMemo} from 'react';
 import {FlatList, RefreshControl} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useSelector, useDispatch} from 'react-redux';
+import {FooterFlatList, NoData} from '../../components';
 import styles from './styles';
-import MovieItem from './components/MovieItem';
+import SuperheroItem from './components/SuperheroItem';
 import Header from './components/Header';
 import {NavigationProps} from '../../navigation/configs/NavigationProps';
 import Screen from '../../navigation/configs/Screen';
-import MovieActions from '../../reduxs/reducer/MovieReducer';
+import SuperheroActions from '../../reduxs/reducer/SuperheroReducer';
+import {RootState} from '../../reduxs';
+import {Colors} from '../../themes';
+import {Superhero} from '../../types/superhero';
 
-interface Props extends NavigationProps<Screen.MovieDetail> {}
+interface Props extends NavigationProps<Screen.SuperheroDetail> {}
 
 function HomeScreen({navigation}: Props) {
-  const data = useSelector((state: any) => state.movie.data);
+  const {data, fetching, textSearch} = useSelector(
+    (state: RootState) => state.superhero,
+  );
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(MovieActions.getMovies());
+    dispatch(SuperheroActions.getSuperheroes());
   }, [dispatch]);
 
-  function onRefresh() {}
+  function onRefresh() {
+    dispatch(SuperheroActions.getSuperheroes());
+  }
+
+  function renderFooter() {
+    if (fetching) {
+      return <FooterFlatList />;
+    }
+  }
+
+  function renderEmptyList() {
+    return <NoData />;
+  }
+
+  const superheroList = useMemo(() => {
+    return data.filter((item: Superhero) => {
+      return item.textForSearch.toLocaleLowerCase().includes(textSearch);
+    });
+  }, [data, textSearch]);
 
   return (
     <SafeAreaView style={styles.container}>
       <FlatList
-        data={data}
+        data={superheroList}
         refreshControl={
-          <RefreshControl refreshing={false} onRefresh={onRefresh} />
+          <RefreshControl
+            tintColor={Colors.white}
+            refreshing={false}
+            onRefresh={onRefresh}
+          />
         }
+        keyboardShouldPersistTaps="handled"
         ListHeaderComponent={<Header />}
+        ListFooterComponent={renderFooter()}
+        ListEmptyComponent={renderEmptyList()}
         keyExtractor={item => item.id.toString()}
         renderItem={({item}) => (
-          <MovieItem data={item} navigation={navigation} />
+          <SuperheroItem data={item} navigation={navigation} />
         )}
       />
     </SafeAreaView>
